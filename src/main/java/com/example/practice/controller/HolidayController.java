@@ -5,6 +5,10 @@ import com.example.practice.model.Visitor;
 import com.example.practice.repository.HolidayRepository;
 import com.google.common.collect.Lists;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import jdk.nashorn.internal.runtime.JSONFunctions;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +32,7 @@ public class HolidayController {
 
     //1st level
 
+    @ApiOperation(value = "Save a piece of holiday history record")
     @PostMapping("/holidayhistory")
     public ResponseEntity<String> saveHistory(@Valid @RequestBody HolidayHistory holidayHistory) throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -37,6 +42,7 @@ public class HolidayController {
         return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Find all holiday history records")
     @GetMapping("/holidayhistory")
     public ResponseEntity<String> findAllHistory() throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -76,6 +82,7 @@ public class HolidayController {
     }
 
 
+    @ApiOperation(value = "Find a piece of holiday history record by historyId")
     @GetMapping("/holidayhistory/{historyId}")
     public ResponseEntity<String> findHistoryById(@PathVariable Integer historyId) throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -112,6 +119,7 @@ public class HolidayController {
 
     //2nd level
 
+    @ApiOperation(value = "Save a piece of visitor information into a specific holiday history record")
     @PostMapping("/holidayhistory/{historyId}/visitor")
     public ResponseEntity<String> saveVisitorByHistoryId(@PathVariable Integer historyId, @Valid @RequestBody Visitor visitor) throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -132,6 +140,7 @@ public class HolidayController {
         return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Find all visitors information in a specific holiday history record")
     @GetMapping("/holidayhistory/{historyId}/visitor")
     public ResponseEntity<String> findAllVisitorByHistoryId(@PathVariable Integer historyId) throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -162,7 +171,7 @@ public class HolidayController {
     }
 
 
-
+    @ApiOperation(value = "Find a piece of visitor information based on holiday historyId and the sequence of the visitor")
     @GetMapping("/holidayhistory/{historyId}/visitor/{order}")
     public ResponseEntity<String> findVisitorByHistoryIdAndOrder(@PathVariable Integer historyId, @PathVariable Integer order) throws JSONException {
         JSONObject jsonObject = new JSONObject();

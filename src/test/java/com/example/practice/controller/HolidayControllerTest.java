@@ -8,8 +8,9 @@ import org.assertj.core.api.Assertions;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,11 +25,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+//import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-class HolidayControllerTest {
+public class HolidayControllerTest {
 
     @Mock
     private HolidayRepository holidayRepository;
@@ -36,7 +37,7 @@ class HolidayControllerTest {
     @InjectMocks
     private HolidayController holidayController = new HolidayController();
 
-    @BeforeEach
+    @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
     }
