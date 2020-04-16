@@ -1,6 +1,5 @@
 package com.example.practice.controller;
 
-//import com.example.practice.Handler.NotFoundAdvice;
 import com.example.practice.model.HolidayHistory;
 import com.example.practice.model.Visitor;
 import com.example.practice.repository.HolidayRepository;
@@ -8,12 +7,12 @@ import org.assertj.core.api.Assertions;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
@@ -25,8 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-//import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class HolidayControllerTest {
@@ -51,12 +50,12 @@ public class HolidayControllerTest {
     @Test
     public void testSaveValidHistory() throws JSONException {
         HolidayHistory holidayHistory1 = new HolidayHistory(1, "13032020", "Shenyang", Collections.emptyList());
-        //when(holidayRepository.save(any(HolidayHistory.class))).thenReturn(holidayHistory1);
         ResponseEntity<String> message = holidayController.saveHistory(holidayHistory1);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status", HttpStatus.OK);
         jsonObject.put("message", "Successfully saved holiday history");
         Assertions.assertThat(message.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+       // Mockito.verify(holidayRepository).save(holidayHistory1);
     }
 
     @Test
@@ -64,6 +63,7 @@ public class HolidayControllerTest {
         HolidayHistory holidayHistory = new HolidayHistory(1, null, "Shenyang", Collections.emptyList());
         when(this.holidayRepository.save(holidayHistory)).thenThrow(new ValidationException());
         Assertions.assertThatThrownBy(()->this.holidayController.saveHistory(holidayHistory)).isInstanceOf(ValidationException.class);
+        Mockito.verify(holidayRepository).save(holidayHistory);
     }
 
     @Test
@@ -108,6 +108,7 @@ public class HolidayControllerTest {
         jsonObject.put("data", array.toString());
         ResponseEntity<String> allFromHistory = holidayController.findAllHistory();
         Assertions.assertThat(allFromHistory.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findAll();
     }
 
 
@@ -119,6 +120,7 @@ public class HolidayControllerTest {
         jsonObject.put("data", Collections.emptyList());
         ResponseEntity<String> allHistory = holidayController.findAllHistory();
         Assertions.assertThat(allHistory.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findAll();
     }
 
 
@@ -133,6 +135,7 @@ public class HolidayControllerTest {
         jsonObject.put("message", "Exception occurred");
         ResponseEntity<String> all = holidayController.findAllHistory();
         Assertions.assertThat(all.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findAll();
     }
 
 
@@ -162,6 +165,7 @@ public class HolidayControllerTest {
         when(holidayRepository.findById(1)).thenReturn(Optional.of(holidayHistory1));
         ResponseEntity<String> all = holidayController.findHistoryById(1);
         Assertions.assertThat(all.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(1);
     }
 
 
@@ -176,6 +180,7 @@ public class HolidayControllerTest {
         jsonObject.put("message", "Nothing found for history record 2");
         ResponseEntity<String> all = holidayController.findHistoryById(2);
         Assertions.assertThat(all.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(2);
     }
 
     @Test
@@ -187,6 +192,7 @@ public class HolidayControllerTest {
         jsonObject.put("message", "Exception occurred");
         ResponseEntity<String> all = holidayController.findHistoryById(1);
         Assertions.assertThat(all.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(1);
     }
 
 
@@ -207,6 +213,8 @@ public class HolidayControllerTest {
         jsonObject.put("message", "Successfully saved visitor in history record 1");
         ResponseEntity<String> message = holidayController.saveVisitorByHistoryId(1,visitor2);
         Assertions.assertThat(message.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(1);
+        Mockito.verify(holidayRepository).save(Mockito.any(HolidayHistory.class));
     }
 
     @Test
@@ -218,6 +226,7 @@ public class HolidayControllerTest {
         jsonObject.put("message", "Nothing found for history record 2");
         ResponseEntity<String> message = holidayController.saveVisitorByHistoryId(2,visitor1);
         Assertions.assertThat(message.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(2);
     }
 
     @Test
@@ -243,6 +252,7 @@ public class HolidayControllerTest {
         when(holidayRepository.findById(1)).thenReturn(Optional.of(holidayHistory1));
         ResponseEntity<String> all = holidayController.findAllVisitorByHistoryId(1);
         Assertions.assertThat(all.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(1);
     }
 
 
@@ -257,6 +267,7 @@ public class HolidayControllerTest {
         jsonObject.put("message", "Nothing found for history record 2");
         ResponseEntity<String> all = holidayController.findAllVisitorByHistoryId(2);
         Assertions.assertThat(all.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(2);
     }
 
     @Test
@@ -268,6 +279,7 @@ public class HolidayControllerTest {
         jsonObject.put("message", "Exception occurred");
         ResponseEntity<String> all = holidayController.findAllVisitorByHistoryId(1);
         Assertions.assertThat(all.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(1);
     }
 
 
@@ -288,6 +300,7 @@ public class HolidayControllerTest {
         when(holidayRepository.findById(1)).thenReturn(Optional.of(holidayHistory1));
         ResponseEntity<String> message = holidayController.findVisitorByHistoryIdAndOrder(1,1);
         Assertions.assertThat(message.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(1);
     }
 
 
@@ -303,6 +316,7 @@ public class HolidayControllerTest {
         when(holidayRepository.findById(1)).thenReturn(Optional.of(holidayHistory1));
         ResponseEntity<String> message = holidayController.findVisitorByHistoryIdAndOrder(1,2);
         Assertions.assertThat(message.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(1);
     }
 
     @Test
@@ -316,6 +330,7 @@ public class HolidayControllerTest {
         jsonObject.put("message", "Nothing found for history record 2");
         ResponseEntity<String> all = holidayController.findVisitorByHistoryIdAndOrder(2,1);
         Assertions.assertThat(all.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(2);
     }
 
     @Test
@@ -327,6 +342,7 @@ public class HolidayControllerTest {
         jsonObject.put("message", "Exception occurred");
         ResponseEntity<String> all = holidayController.findVisitorByHistoryIdAndOrder(1,1);
         Assertions.assertThat(all.getBody()).isNotNull().isEqualTo(jsonObject.toString());
+        Mockito.verify(holidayRepository).findById(1);
     }
 
 

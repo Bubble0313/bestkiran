@@ -4,14 +4,10 @@ import com.example.practice.model.HolidayHistory;
 import com.example.practice.model.Visitor;
 import com.example.practice.repository.HolidayRepository;
 import com.google.common.collect.Lists;
-
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jdk.nashorn.internal.runtime.JSONFunctions;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +17,6 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import org.json.JSONObject;
 
 @RestController
 public class HolidayController {
@@ -48,7 +42,7 @@ public class HolidayController {
         JSONObject jsonObject = new JSONObject();
         try {
             List<HolidayHistory> holidayHistoryList = Lists.newArrayList(this.holidayRepository.findAll());
-            if (holidayHistoryList.size() > 0) {
+            if (!holidayHistoryList.isEmpty()) {
                 JSONArray array = new JSONArray();
                 for (HolidayHistory holi : holidayHistoryList) {
                     JSONObject object1 = new JSONObject();
@@ -128,12 +122,12 @@ public class HolidayController {
             jsonObject.put("status", HttpStatus.BAD_REQUEST);
             jsonObject.put("message", "Nothing found for history record " + historyId);
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.BAD_REQUEST);
-        } else if (history != null && history.get().getId() == historyId) {
-            List<Visitor> l = history.get().getVisitorList();
-            l.add(visitor);
-            HolidayHistory his = history.get();
-            his.setVisitorList(l);
-            this.holidayRepository.save(his);
+        } else {
+            List<Visitor> list = history.get().getVisitorList();
+            list.add(visitor);
+            HolidayHistory history1 = history.get();
+            history1.setVisitorList(list);
+            this.holidayRepository.save(history1);
             jsonObject.put("status", HttpStatus.OK);
             jsonObject.put("message", "Successfully saved visitor in history record " + historyId);
         }

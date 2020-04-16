@@ -8,4 +8,3 @@ import org.springframework.stereotype.Repository;
 public interface HolidayRepository extends CrudRepository<HolidayHistory,Integer> {
 
 }
-// List<HolidayHistory> findByCountry(String country);
