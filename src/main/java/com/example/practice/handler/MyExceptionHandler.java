@@ -13,9 +13,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class MyExceptionHandler {
     @ResponseBody
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> notFoundHandler(MethodArgumentTypeMismatchException ex) {
-        return new ResponseEntity<>("Illegal argument! An integer is expected.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Illegal argument! An integer is expected.", HttpStatus.BAD_REQUEST);
     }
 
 }
